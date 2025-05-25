@@ -7,8 +7,35 @@ import time
 from datetime import datetime, timezone
 import warnings
 import pytz
+import os
 
 warnings.filterwarnings("ignore", category=FutureWarning)
+
+
+from twilio.rest import Client
+
+account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+
+# Configuración Twilio (pon tus datos aquí)
+TWILIO_ACCOUNT_SID = "TWILIO_ACCOUNT_SID"
+TWILIO_AUTH_TOKEN = "TWILIO_AUTH_TOKEN"
+TWILIO_WHATSAPP_FROM = "whatsapp:+18148851311"  # Número sandbox de Twilio
+WHATSAPP_TO = "whatsapp:+525521964882"  # Tu número con código país, ej: +52 para México
+
+client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+def enviar_whatsapp(mensaje: str):
+    try:
+        message = client.messages.create(
+            from_=TWILIO_WHATSAPP_FROM,
+            body=mensaje,
+            to=WHATSAPP_TO
+        )
+        print("Mensaje enviado, SID:", message.sid)
+    except Exception as e:
+        print("Error enviando mensaje WhatsApp:", e)
+
 
 # Configuración inicial
 st.set_page_config(page_title="Bot RSI BTC + MACD + EMA", layout="wide")
