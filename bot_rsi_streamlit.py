@@ -7,37 +7,8 @@ import time
 from datetime import datetime, timezone
 import warnings
 import pytz
-import os
 
 warnings.filterwarnings("ignore", category=FutureWarning)
-
-
-from twilio.rest import Client
-
-from dotenv import load_dotenv
-
-# Carga las variables del archivo claves.env
-load_dotenv('claves.env')
-
-# Ahora puedes obtener las variables de entorno
-account_sid = os.getenv("TWILIO_ACCOUNT_SID")
-auth_token = os.getenv("TWILIO_AUTH_TOKEN")
-
-
-client = Client(account_sid, auth_token)
-
-# Ejemplo de uso
-TWILIO_WHATSAPP_FROM = "whatsapp:+18148851311"  # Número sandbox Twilio
-WHATSAPP_TO = "whatsapp:+525521964882"  # Tu número destino
-
-message = client.messages.create(
-    from_=TWILIO_WHATSAPP_FROM,
-    body="Hola desde Twilio usando claves desde .env!",
-    to=WHATSAPP_TO
-)
-
-print("Mensaje enviado, SID:", message.sid)
-
 
 # Configuración inicial
 st.set_page_config(page_title="Bot RSI BTC + MACD + EMA", layout="wide")
@@ -57,7 +28,7 @@ if 'last_update' not in st.session_state:
 # Parámetros y comisión
 symbol = "BTC-USD"
 interval = "5m"
-period = "1d"
+period = "7d"
 COMISION = 0.001  # 0.1% comisión
 
 # Función para calcular RSI
@@ -85,7 +56,7 @@ def calcular_macd(data, fast=12, slow=26, signal=9):
     return macd_line, signal_line, histogram
 
 # Función para obtener datos y calcular indicadores
-def obtener_datos():
+def obtener_datos(period):
     df = yf.download(tickers=symbol, interval=interval, period=period)
     df['RSI'] = calcular_rsi(df['Close'], 14)
     df['EMA_12'] = calcular_ema(df['Close'], 12)
@@ -96,8 +67,15 @@ def obtener_datos():
     df['MACD_Hist'] = hist
     return df
 
+period = st.sidebar.selectbox(
+    "Selecciona el intervalo de tiempo para la gráfica",
+    options=["1d", "3d", "7d", "14d", "1mo", "3mo", "6mo"],
+    index=2,  # por defecto 7d
+)
+
+
 # Obtener y mostrar datos
-df = obtener_datos()
+df = obtener_datos(period)
 df.columns = df.columns.get_level_values(0)
 
 st.title("🤖 Bot de Trading BTC/USDT con RSI, MACD y EMA")
@@ -285,4 +263,3 @@ if not df.empty and 'Close' in df.columns and 'RSI' in df.columns:
 
 else:
     st.warning("No se pudieron obtener datos de BTC.")
-
