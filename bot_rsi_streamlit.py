@@ -14,27 +14,29 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 from twilio.rest import Client
 
+from dotenv import load_dotenv
+
+# Carga las variables del archivo claves.env
+load_dotenv('claves.env')
+
+# Ahora puedes obtener las variables de entorno
 account_sid = os.getenv("TWILIO_ACCOUNT_SID")
 auth_token = os.getenv("TWILIO_AUTH_TOKEN")
 
-# Configuración Twilio (pon tus datos aquí)
-TWILIO_ACCOUNT_SID = "TWILIO_ACCOUNT_SID"
-TWILIO_AUTH_TOKEN = "TWILIO_AUTH_TOKEN"
-TWILIO_WHATSAPP_FROM = "whatsapp:+18148851311"  # Número sandbox de Twilio
-WHATSAPP_TO = "whatsapp:+525521964882"  # Tu número con código país, ej: +52 para México
 
-client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+client = Client(account_sid, auth_token)
 
-def enviar_whatsapp(mensaje: str):
-    try:
-        message = client.messages.create(
-            from_=TWILIO_WHATSAPP_FROM,
-            body=mensaje,
-            to=WHATSAPP_TO
-        )
-        print("Mensaje enviado, SID:", message.sid)
-    except Exception as e:
-        print("Error enviando mensaje WhatsApp:", e)
+# Ejemplo de uso
+TWILIO_WHATSAPP_FROM = "whatsapp:+18148851311"  # Número sandbox Twilio
+WHATSAPP_TO = "whatsapp:+525521964882"  # Tu número destino
+
+message = client.messages.create(
+    from_=TWILIO_WHATSAPP_FROM,
+    body="Hola desde Twilio usando claves desde .env!",
+    to=WHATSAPP_TO
+)
+
+print("Mensaje enviado, SID:", message.sid)
 
 
 # Configuración inicial
