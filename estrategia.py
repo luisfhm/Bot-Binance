@@ -25,7 +25,7 @@ def calcular_senal_actual(df):
         return "⚪ Sin señal clara"
 
 
-def generar_señales_historicas(df, rsi_venta=70, rsi_compra=30):
+def generar_señales_historicas(df, rsi_venta=80, rsi_compra=20):
     posicion_actual = "SIN_SEÑAL"
     señales = []
 
