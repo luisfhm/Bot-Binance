@@ -33,6 +33,20 @@ interval = "5m"
 
 st.title(f"🤖 Bot de Trading {symbol} con RSI, MACD y EMA")
 
+import time
+
+REFRESH_INTERVAL = 30  # segundos
+
+# Botón manual
+if st.button("🔁 Refrescar ahora"):
+    st.session_state["last_update"] = time.time()
+
+# Auto-refresco cada N segundos
+if time.time() - st.session_state["last_update"] > REFRESH_INTERVAL:
+    st.session_state["last_update"] = time.time()
+    st.experimental_rerun()
+
+
 # Mostrar hora local y UTC
 local_tz = pytz.timezone("America/Mexico_City")
 st.write(f"🕒 Hora local: {datetime.now(local_tz).strftime('%Y-%m-%d %H:%M:%S %Z')}")
