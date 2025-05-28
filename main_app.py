@@ -61,9 +61,27 @@ with tabs[0]:
         precio = df['Close'].iloc[-1]
 
         # Señal combinada simplificada (resumen)
-        senal = calcular_senal_actual(df)
-        st.subheader("🔍 Señal actual:")
+        senal, s_rsi, s_ema, s_macd, rsi, ema_rapida, ema_lenta, macd, macd_signal = calcular_senal_actual(df)
+
+        st.subheader("🔍 Señal técnica actual")
         st.info(senal)
+
+        col1, col2, col3 = st.columns(3)
+
+        # Columna 1 - RSI
+        with col1:
+            st.metric("📉 RSI", f"{rsi:.2f}", help=f"Señal RSI: {s_rsi}")
+
+        # Columna 2 - EMAs (formato precio)
+        with col2:
+            st.metric("📊 EMA Rápida (12)", f"${ema_rapida:,.2f}")
+            st.metric("📊 EMA Lenta (26)", f"${ema_lenta:,.2f}", help=f"Señal EMA: {s_ema}")
+
+        # Columna 3 - MACD y Señal (también como precios si deseas)
+        with col3:
+            st.metric("📈 MACD", f"{macd:,.2f}")
+            st.metric("📈 Señal MACD", f"{macd_signal:,.2f}", help=f"Señal MACD: {s_macd}")
+
 
 
         # Mostrar gráficos
@@ -110,7 +128,15 @@ with tabs[1]:
     capital_final = evaluar_estrategia(df)
 
     st.metric("💰 Capital final simulado", f"${capital_final:.2f}")
-    st.dataframe(df[['Close', 'RSI', 'EMA_rapida', 'EMA_lenta', 'MACD', 'MACD_Signal', 'Señal']].tail(20))
+    df_tabla = df.copy()
+    for col in ["Close", "EMA_rapida", "EMA_lenta"]:
+        df_tabla[col] = df_tabla[col].apply(lambda x: f"${x:,.2f}")
+    df_tabla["MACD"] = df_tabla["MACD"].apply(lambda x: f"{x:,.2f}")
+    df_tabla["MACD_Signal"] = df_tabla["MACD_Signal"].apply(lambda x: f"{x:,.2f}")
+    df_tabla["RSI"] = df_tabla["RSI"].apply(lambda x: f"{x:.2f}")
+
+    st.dataframe(df_tabla[["Close", "RSI", "EMA_rapida", "EMA_lenta", "MACD", "MACD_Signal", "Señal"]].tail(100))
+
 
     st.plotly_chart(graficar_backtest_entradas_salidas(df, symbol), use_container_width=True)
 

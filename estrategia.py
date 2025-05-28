@@ -18,11 +18,11 @@ def calcular_senal_actual(df):
     suma = senal_rsi + senal_ema + senal_macd
 
     if suma > 0:
-        return "🟢 Señal combinada de COMPRA"
+        return "🟢 Señal combinada de COMPRA", senal_rsi, senal_ema, senal_macd, rsi, ema_rapida, ema_lenta, macd, macd_signal
     elif suma < 0:
-        return "🔴 Señal combinada de VENTA"
+        return "🔴 Señal combinada de VENTA", senal_rsi, senal_ema, senal_macd, rsi, ema_rapida, ema_lenta, macd, macd_signal
     else:
-        return "⚪ Sin señal clara"
+        return "⚪ Sin señal clara", senal_rsi, senal_ema, senal_macd, rsi, ema_rapida, ema_lenta, macd, macd_signal
 
 
 def generar_señales_historicas(df, rsi_venta=80, rsi_compra=20):
