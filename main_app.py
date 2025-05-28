@@ -44,7 +44,7 @@ if st.button("🔁 Refrescar ahora"):
 # Auto-refresco cada N segundos
 if time.time() - st.session_state["last_update"] > REFRESH_INTERVAL:
     st.session_state["last_update"] = time.time()
-    st.experimental_rerun()
+    st.rerun()
 
 
 # Mostrar hora local y UTC
