@@ -55,19 +55,7 @@ st.write(f"🕒 Hora UTC: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%
 tabs = st.tabs(["📊 Análisis en Tiempo Real", "📈 Backtesting"])
 
 with tabs[0]:
-    st.header("Ajuste de parámetros técnicos")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        rsi_periodo = st.slider("RSI Periodo", 5, 30, 14)
-        ema_rapida = st.slider("EMA Rápida", 5, 50, 12)
-        macd_fast = st.slider("MACD Fast", 5, 50, 12)
-    with col2:
-        ema_lenta = st.slider("EMA Lenta", 10, 100, 26)
-        macd_slow = st.slider("MACD Slow", 10, 100, 26)
-        macd_signal = st.slider("MACD Signal", 5, 30, 9)
-
-    df = obtener_datos(symbol, interval, period, rsi_periodo, ema_rapida, ema_lenta, macd_fast, macd_slow, macd_signal)
+    df = obtener_datos(symbol, interval, period)
 
     if not df.empty:
         precio = df['Close'].iloc[-1]
@@ -116,7 +104,7 @@ with tabs[1]:
     macd_s = 26
     macd_sig = 9
 
-    df = obtener_datos(symbol, interval, period, rsi_p, ema_f, ema_l, macd_f, macd_s, macd_sig)
+    df = obtener_datos(symbol, interval, period)
     df.dropna(inplace=True)
     df['Señal'] = generar_señales_historicas(df)
     capital_final = evaluar_estrategia(df)
