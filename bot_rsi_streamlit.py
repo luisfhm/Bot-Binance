@@ -434,7 +434,7 @@ with tabs[1]:
         st.error("No se encontraron parámetros óptimos con los rangos especificados.")
     else:
         # Desempaquetar parámetros
-        rsi_p, ema_f, ema_l, macd_f, macd_s, macd_sig = mejores_parametros
+        rsi_p, ema_f, ema_l, macd_f, macd_s, macd_sig, rsi_compra, rsi_venta = mejores_parametros
 
         # Calcular indicadores en test con mejores parámetros
         df_test['RSI'] = ta.momentum.rsi(df_test['Close'], window=rsi_p)
