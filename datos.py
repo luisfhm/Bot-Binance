@@ -11,9 +11,8 @@ def obtener_datos(symbol, interval, period):
     macd_sig = 9
 
     df = yf.download(tickers=symbol, interval=interval, period=period)
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = df.columns.get_level_values(0)
-
+    df.columns = df.columns.get_level_values(0)
+    
     df['RSI'] = calcular_rsi(df['Close'], rsi_p)
     df['EMA_rapida'] = calcular_ema(df['Close'], ema_f)
     df['EMA_lenta'] = calcular_ema(df['Close'], ema_l)
